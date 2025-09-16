@@ -10,7 +10,8 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
+    {   
+        // tugas da 3
         // Users
         Schema::create('users', function (Blueprint $table) {
             $table->id();
@@ -18,7 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('role')->default('users'); // contoh role: admin, dosen, mahasiswa
+            $table->string('role')->default('users');
             $table->rememberToken();
             $table->timestamps();
         });
