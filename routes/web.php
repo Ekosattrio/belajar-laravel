@@ -1,40 +1,46 @@
 <?php
 
-// Route::get('/', function () {
-//     return redirect()->route('login');
-// });
-
-// Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-// Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-// Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-
-// Route::get('/mahasiswa', function () {
-//     return "Dashboard Mahasiswa";
-// });
-
-// Route::get('/dosen', function () {
-//     return "Dashboard Dosen";
-// });
-
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Auth routes
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Dashboard routes
+// Setelah login, arahkan sesuai role
 Route::get('/dashboard', function () {
     $user = auth()->user();
-    return view('dashboard', compact('user'));
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    } elseif ($user->role === 'owner') {
+        return redirect()->route('owner.dashboard');
+    } else {
+        return redirect()->route('user.dashboard');
+    }
 })->middleware('auth')->name('dashboard');
 
+// Dashboard masing-masing role
+Route::middleware(['auth', 'role:user'])->get('/user/dashboard', function () {
+    $user = auth()->user(); 
+    return view('user.dashboard', compact('user')); 
+})->name('user.dashboard');
 
-// Hapus ini kalau nggak pakai Breeze/Fortify
-// require __DIR__.'/auth.php';
+Route::middleware(['auth', 'role:admin'])->get('/admin/dashboard', function () {
+    $user = auth()->user();
+    return view('admin.dashboard', compact('user'));
+})->name('admin.dashboard');
+
+Route::middleware(['auth', 'role:owner'])->get('/owner/dashboard', function () {
+    $user = auth()->user();
+    return view('owner.dashboard', compact('user'));
+})->name('owner.dashboard');
+
+// Route Products hanya untuk admin & owner
+Route::middleware(['auth', 'role:admin,owner'])->group(function () {
+    Route::get('/products', [ProductController::class, 'form'])->name('products.form');
+    Route::post('/products/process', [ProductController::class, 'process'])->name('products.process');
+});
+
+// Auth routes bawaan Breeze
+require __DIR__.'/auth.php';

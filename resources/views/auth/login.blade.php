@@ -9,7 +9,7 @@
 <div class="card shadow p-4" style="width: 350px;">
     <h3 class="text-center mb-3">Selamat Datang</h3>
     <p class="text-center">Silakan login ke <b>{{ config('app.name') }}</b></p>
-    <form method="POST" action="{{ route('login.post') }}">
+    <form method="POST" action="{{ route('login') }}">
         @csrf
         <div class="mb-3">
             <label>Email</label>
@@ -21,6 +21,12 @@
         </div>
         <button class="btn btn-primary w-100">Login</button>
     </form>
+
+    <div class="text-center mt-3">
+        <small>Belum punya akun? 
+            <a href="{{ route('register') }}">Daftar di sini</a>
+        </small>
+    </div>
 </div>
 
 </body>
