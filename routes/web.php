@@ -41,6 +41,13 @@ Route::middleware(['auth', 'role:admin,owner'])->group(function () {
     Route::get('/products', [ProductController::class, 'form'])->name('products.form');
     Route::post('/products/process', [ProductController::class, 'process'])->name('products.process');
 });
+Route::middleware(['auth', 'role:admin,owner'])->group(function () {
+    Route::get('/products', [ProductController::class, 'form'])->name('products.form');
+    Route::post('/products/process', [ProductController::class, 'process'])->name('products.process');
+    Route::get('/barang', [ProductController::class, 'barang'])->name('barang');
+    Route::get('/produk', [ProductController::class, 'produkk'])->name('produk');
+
+});
 
 // Auth routes bawaan Breeze
 require __DIR__.'/auth.php';
