@@ -13,21 +13,34 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => ['required','email'],
-            'password' => ['required'],
-        ]);
+{
+    $credentials = $request->validate([
+        'email' => ['required','email'],
+        'password' => ['required'],
+    ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+
+        $user = Auth::user();
+
+       
+        if ($user->role === 'admin') {
             return redirect()->route('dashboard');
+        } elseif ($user->role === 'owner') {
+            return redirect()->route('owner.dashboard');
+        } elseif ($user->role === 'user') {
+            return redirect()->route('user.dashboard');
+        } elseif ($user->role === 'uts') {
+            return redirect()->route('uts.index'); 
         }
-
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ]);
     }
+
+    return back()->withErrors([
+        'email' => 'Email atau password salah.',
+    ]);
+}
+
 
     public function logout(Request $request)
     {

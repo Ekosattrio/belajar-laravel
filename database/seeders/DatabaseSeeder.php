@@ -35,5 +35,13 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
             'role' => 'owner',
         ]);
+
+        // UTS
+        User::create([
+            'name' => 'Mahasiswa UTS',
+            'email' => 'uts@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'uts',
+        ]);
     }
 }

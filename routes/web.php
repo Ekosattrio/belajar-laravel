@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UtsController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -11,10 +12,13 @@ Route::get('/', function () {
 // Setelah login, arahkan sesuai role
 Route::get('/dashboard', function () {
     $user = auth()->user();
+
     if ($user->role === 'admin') {
         return redirect()->route('admin.dashboard');
     } elseif ($user->role === 'owner') {
         return redirect()->route('owner.dashboard');
+    } elseif ($user->role === 'uts') {
+        return redirect()->route('uts.dashboard');
     } else {
         return redirect()->route('user.dashboard');
     }
@@ -48,6 +52,23 @@ Route::middleware(['auth', 'role:admin,owner'])->group(function () {
     Route::get('/produk', [ProductController::class, 'produkk'])->name('produk');
 
 });
+
+Route::middleware(['auth', 'role:uts'])->group(function () {
+
+    // Dashboard utama UTS
+    Route::get('/uts/dashboard', [UtsController::class, 'index'])->name('uts.dashboard');
+
+    // Menu Pemrograman Web
+    Route::get('/uts/pemrograman', function () {
+        return view('uts.pemrograman');
+    })->name('uts.pemrograman');
+
+    // Menu Database
+    Route::get('/uts/database', function () {
+        return view('uts.database');
+    })->name('uts.database');
+});
+
 
 // Auth routes bawaan Breeze
 require __DIR__.'/auth.php';
