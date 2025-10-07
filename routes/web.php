@@ -49,9 +49,14 @@ Route::middleware(['auth', 'role:admin,owner'])->group(function () {
     Route::get('/products', [ProductController::class, 'form'])->name('products.form');
     Route::post('/products/process', [ProductController::class, 'process'])->name('products.process');
     Route::get('/barang', [ProductController::class, 'barang'])->name('barang');
+
+    // route lama lo
     Route::get('/produk', [ProductController::class, 'produkk'])->name('produk');
 
+    // tambahin ini buat parameter angka
+    Route::get('/produk/{angka}', [ProductController::class, 'produk'])->name('produk.angka');
 });
+
 
 Route::middleware(['auth', 'role:uts'])->group(function () {
 
