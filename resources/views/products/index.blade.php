@@ -1,24 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Hasil Angka</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="p-4">
-    <h2>Hasil Perhitungan</h2>
+@extends('layouts.app')
 
-    {{-- Tampilkan ganjil/genap dulu (jika ada) --}}
-    @isset($message)
-        <p>Angka: <b>{{ $angka }}</b></p>
-        <x-alert :type="$type" :message="$message" />
-    @endisset
+@section('title', 'Hasil Angka')
 
-    {{-- Lalu tampilkan hasil setelah ditambah 10 --}}
-    @isset($hasil)
-        <p>Setelah diproses (ditambah 10): <b>{{ $hasil }}</b></p>
-    @endisset
+@section('content')
+<div class="py-4">
+    <div class="container">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="mb-4 text-center text-primary">Hasil Perhitungan</h2>
 
-    <a href="{{ route('products.form') }}" class="btn btn-warning mt-3">Input Lagi</a>
-    <a href="{{ route('dashboard') }}" class="btn btn-primary mt-3">Kembali ke Dashboard</a>
-</body>
-</html>
+                {{-- Tampilkan ganjil/genap  --}}
+                @isset($message)
+                    <div class="mb-3">
+                        <p>Angka: <b>{{ $angka }}</b></p>
+                        <x-alert type="{{ $type }}">
+    {{ $message }}
+</x-alert>
+
+                    </div>
+                @endisset
+
+                @isset($hasil)
+                    <p>Setelah diproses (ditambah 10): <b>{{ $hasil }}</b></p>
+                @endisset
+
+                <div class="mt-4 d-flex justify-content-center gap-2">
+                    <a href="{{ route('products.form') }}" class="btn btn-warning">Input Lagi</a>
+                    <a href="{{ route('dashboard') }}" class="btn btn-primary">Kembali ke Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

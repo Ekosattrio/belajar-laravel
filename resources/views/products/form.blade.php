@@ -1,21 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Input Angka</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="p-4">
-    <h2>Input Angka</h2>
+@extends('layouts.app')
 
-    <form method="POST" action="{{ route('products.process') }}">
-        @csrf
-        <div class="mb-3">
-            <label for="angka" class="form-label">Masukkan Angka</label>
-            <input type="number" name="angka" id="angka" class="form-control" required>
+@section('title', 'Input Angka')
+
+@section('content')
+<div class="py-4">
+    <div class="container">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="mb-4 text-center text-primary">Input Angka</h2>
+
+                <form method="POST" action="{{ route('products.process') }}">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="angka" class="form-label">Masukkan Angka</label>
+                        <input type="number" name="angka" id="angka" class="form-control" required>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-2 mt-3">
+                        <button type="submit" class="btn btn-success">Proses</button>
+                        <a href="{{ route('dashboard') }}" class="btn btn-primary">Kembali ke Dashboard</a>
+                    </div>
+                </form>
+            </div>
         </div>
-        <button type="submit" class="btn btn-success">Proses</button>
-    </form>
-
-    <a href="{{ route('dashboard') }}" class="btn btn-primary mt-3">Kembali ke Dashboard</a>
-</body>
-</html>
+    </div>
+</div>
+@endsection

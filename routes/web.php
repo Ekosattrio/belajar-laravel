@@ -3,11 +3,11 @@
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UtsController;
+use App\Http\Controllers\MasterProductController; // pastiin ini ditambah
 
 Route::get('/', function () {
     return redirect()->route('login');
 });
-
 
 // Setelah login, arahkan sesuai role
 Route::get('/dashboard', function () {
@@ -57,23 +57,30 @@ Route::middleware(['auth', 'role:admin,owner'])->group(function () {
     Route::get('/produk/{angka}', [ProductController::class, 'produk'])->name('produk.angka');
 });
 
+Route::middleware(['auth', 'role:admin,owner'])->group(function () {
+    Route::get('/master/product', [MasterProductController::class, 'index'])->name('master.product.index');
+    Route::get('/master/product/create', [MasterProductController::class, 'create'])->name('master.product.create');
+    Route::post('/master/product/store', [MasterProductController::class, 'store'])->name('master.product.store');
+});
 
 Route::middleware(['auth', 'role:uts'])->group(function () {
-
-    // Dashboard utama UTS
     Route::get('/uts/dashboard', [UtsController::class, 'index'])->name('uts.dashboard');
 
-    // Menu Pemrograman Web
     Route::get('/uts/pemrograman', function () {
         return view('uts.pemrograman');
     })->name('uts.pemrograman');
 
-    // Menu Database
     Route::get('/uts/database', function () {
         return view('uts.database');
     })->name('uts.database');
 });
 
+// Tambahan alias agar route lama tidak error
+Route::middleware(['auth', 'role:admin,owner'])->get('/product/create', function () {
+    return redirect()->route('master.product.create');
+})->name('product-create');
+Route::get('/products/create', [ProductController::class, 'create'])->name('master.product.create');
+Route::post('/products', [ProductController::class, 'store'])->name('master.product.store');
 
 // Auth routes bawaan Breeze
 require __DIR__.'/auth.php';
