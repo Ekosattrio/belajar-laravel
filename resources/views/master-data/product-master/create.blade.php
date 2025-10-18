@@ -2,56 +2,44 @@
 
 @section('content')
     <div class="container mt-4">
-        <h2 class="mb-4">Tambah Produk Baru</h2>
+        <h2>Tambah Produk</h2>
 
         <form action="{{ route('master.product.store') }}" method="POST">
             @csrf
-
             <div class="mb-3">
-                <label class="form-label">Nama Produk</label>
+                <label>Nama Produk</label>
                 <input type="text" name="product_name" class="form-control" required>
             </div>
-
             <div class="mb-3">
-                <label class="form-label">Unit</label>
-                <input type="text" name="unit" class="form-control" required placeholder="contoh: pcs, unit, pack">
+                <label>Unit</label>
+                <input type="text" name="unit" class="form-control" required>
             </div>
-
             <div class="mb-3">
-                <label class="form-label">Tipe</label>
-                <input type="text" name="type" class="form-control" required
-                    placeholder="contoh: Elektronik, Pakaian">
+                <label>Type</label>
+                <input type="text" name="type" class="form-control" required>
             </div>
-
             <div class="mb-3">
-                <label class="form-label">Qty</label>
-                <input type="number" name="qty" class="form-control" required min="0">
+                <label>Qty</label>
+                <input type="number" name="qty" class="form-control" required>
             </div>
-
             <div class="mb-3">
-                <label class="form-label">Produsen</label>
+                <label>Producer</label>
                 <input type="text" name="producer" class="form-control" required>
             </div>
-
             <div class="mb-3">
-                <label class="form-label">Kategori</label>
+                <label>Informasi</label>
+                <textarea name="information" class="form-control"></textarea>
+            </div>
+            <div class="mb-3">
+                <label>Kategori</label>
                 <select name="category_id" class="form-control" required>
-                    <option value="">-- Pilih Kategori --</option>
-                    @foreach ($categories as $cat)
-                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach
                 </select>
             </div>
-
-            <div class="mb-3">
-                <label class="form-label">Keterangan</label>
-                <textarea name="information" class="form-control" rows="3"></textarea>
-            </div>
-
-            <div class="text-end">
-                <a href="{{ route('master.product.index') }}" class="btn btn-secondary">Kembali</a>
-                <button type="submit" class="btn btn-success">Simpan</button>
-            </div>
+            <button type="submit" class="btn btn-success">Simpan</button>
+            <a href="{{ route('master.product.index') }}" class="btn btn-secondary">Batal</a>
         </form>
     </div>
 @endsection

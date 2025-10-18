@@ -39,15 +39,15 @@ class ProductController extends Controller
     }
 
     // === STORE: simpan produk baru ===
-    public function store(Request $request)
+     public function store(Request $request)
     {
         $validated = $request->validate([
             'product_name' => 'required|string|max:255',
             'unit' => 'required|string|max:50',
             'type' => 'required|string|max:100',
-            'information' => 'nullable|string',
             'qty' => 'required|integer|min:0',
             'producer' => 'required|string|max:255',
+            'information' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
         ]);
 
@@ -57,11 +57,12 @@ class ProductController extends Controller
     }
 
     // === EDIT: form edit produk ===
-    public function edit(Product $product)
+       public function edit(Product $product)
     {
         $categories = Category::all();
         return view('master-data.product-master.edit', compact('product', 'categories'));
     }
+
 
     // === UPDATE: simpan perubahan produk ===
     public function update(Request $request, Product $product)

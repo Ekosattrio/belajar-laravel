@@ -2,57 +2,48 @@
 
 @section('content')
     <div class="container mt-4">
-        <h2 class="mb-4">Daftar Produk</h2>
+        <h2>Daftar Produk</h2>
+        <a href="{{ route('master.product.create') }}" class="btn btn-primary mb-3">Tambah Produk</a>
 
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        <div class="mb-3 text-end">
-            <a href="{{ route('master.product.create') }}" class="btn btn-primary">+ Tambah Produk</a>
-        </div>
-
-        <table class="table table-bordered table-striped align-middle">
-            <thead class="table-dark">
+        <table class="table table-bordered">
+            <thead>
                 <tr>
                     <th>No</th>
                     <th>Nama Produk</th>
-                    <th>Kategori</th>
                     <th>Unit</th>
-                    <th>Tipe</th>
+                    <th>Type</th>
                     <th>Qty</th>
-                    <th>Produsen</th>
-                    <th>Keterangan</th>
-                    <th width="140px">Aksi</th>
+                    <th>Producer</th>
+                    <th>Kategori</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($products as $key => $product)
+                @foreach ($products as $product)
                     <tr>
-                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $loop->iteration }}</td>
                         <td>{{ $product->product_name }}</td>
-                        <td>{{ $product->category->name ?? '-' }}</td>
                         <td>{{ $product->unit }}</td>
                         <td>{{ $product->type }}</td>
                         <td>{{ $product->qty }}</td>
                         <td>{{ $product->producer }}</td>
-                        <td>{{ $product->information ?? '-' }}</td>
+                        <td>{{ $product->category->name ?? '-' }}</td>
                         <td>
-                            <a href="{{ route('master.product.edit', $product->id) }}"
-                                class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{ route('master.product.edit', $product->id) }}" class="btn btn-warning btn-sm">Edit</a>
                             <form action="{{ route('master.product.destroy', $product->id) }}" method="POST"
-                                class="d-inline" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
+                                style="display:inline-block;">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-sm btn-danger">Hapus</button>
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Yakin ingin hapus?')">Hapus</button>
                             </form>
                         </td>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="9" class="text-center text-muted">Belum ada data produk.</td>
-                    </tr>
-                @endforelse
+                @endforeach
             </tbody>
         </table>
     </div>
