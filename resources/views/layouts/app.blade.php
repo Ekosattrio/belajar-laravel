@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,7 +43,8 @@
             transition: all 0.2s;
         }
 
-        .sidebar a:hover, .sidebar a.active {
+        .sidebar a:hover,
+        .sidebar a.active {
             background-color: #3b82f6;
             color: white;
         }
@@ -72,35 +74,21 @@
         }
     </style>
 </head>
-<body>
 
-    {{-- Sidebar --}}
-    <div class="sidebar">
-        <h5>Panel Admin</h5>
-        <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
-        <a href="{{ route('products.form') }}" class="{{ request()->routeIs('products.form') ? 'active' : '' }}">Kelola Produk</a>
-        <a href="{{ route('barang') }}" class="{{ request()->routeIs('barang') ? 'active' : '' }}">Barang</a>
-        <a href="{{ route('produk') }}" class="{{ request()->routeIs('produk') ? 'active' : '' }}">Produk</a>
-
-        <form method="POST" action="{{ route('logout') }}" class="mt-3">
-            @csrf
-            <button type="submit" class="btn btn-outline-danger w-100">Logout</button>
-        </form>
+<body> {{-- Sidebar --}} <div class="sidebar">
+        <h5>Panel Admin</h5> <a href="{{ route('dashboard') }}"
+            class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a> <a
+            href="{{ route('products.form') }}" class="{{ request()->routeIs('products.form') ? 'active' : '' }}">Kelola
+            Produk</a> <a href="{{ route('barang') }}"
+            class="{{ request()->routeIs('barang') ? 'active' : '' }}">Barang</a> <a href="{{ route('produk') }}"
+            class="{{ request()->routeIs('produk') ? 'active' : '' }}">Produk</a>
+        <form method="POST" action="{{ route('logout') }}" class="mt-3"> @csrf <button type="submit"
+                class="btn btn-outline-danger w-100">Logout</button> </form>
+    </div> {{-- Main Area --}} <div class="main-content"> {{-- Navbar --}} <div
+            class="navbar d-flex justify-content-between align-items-center mb-3">
+            <h6>@yield('title', 'Dashboard')</h6> <span class="text-muted">Halo, {{ Auth::user()->name ?? 'User' }}</span>
+        </div> {{-- Content --}} <div class="content-area"> @yield('content') </div>
     </div>
-
-    {{-- Main Area --}}
-    <div class="main-content">  
-        {{-- Navbar --}}
-        <div class="navbar d-flex justify-content-between align-items-center mb-3">
-            <h6>@yield('title', 'Dashboard')</h6>
-            <span class="text-muted">Halo, {{ Auth::user()->name ?? 'User' }}</span>
-        </div>
-
-        {{-- Content --}}
-        <div class="content-area">
-            @yield('content')
-        </div>
-    </div>
-
 </body>
+
 </html>

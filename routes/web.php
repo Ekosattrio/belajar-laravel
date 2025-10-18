@@ -1,86 +1,67 @@
 <?php
 
 use App\Http\Controllers\ProductController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UtsController;
-use App\Http\Controllers\MasterProductController; // pastiin ini ditambah
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Setelah login, arahkan sesuai role
+// Setelah login
 Route::get('/dashboard', function () {
     $user = auth()->user();
 
-    if ($user->role === 'admin') {
-        return redirect()->route('admin.dashboard');
-    } elseif ($user->role === 'owner') {
-        return redirect()->route('owner.dashboard');
-    } elseif ($user->role === 'uts') {
-        return redirect()->route('uts.dashboard');
-    } else {
-        return redirect()->route('user.dashboard');
-    }
+    return match ($user->role) {
+        'admin' => redirect()->route('admin.dashboard'),
+        'owner' => redirect()->route('owner.dashboard'),
+        'uts' => redirect()->route('uts.dashboard'),
+        default => redirect()->route('user.dashboard'),
+    };
 })->middleware('auth')->name('dashboard');
 
-// Dashboard masing-masing role
-Route::middleware(['auth', 'role:user'])->get('/user/dashboard', function () {
-    $user = auth()->user(); 
-    return view('user.dashboard', compact('user')); 
-})->name('user.dashboard');
+// ===== Dashboard Role =====
+Route::middleware(['auth', 'role:user'])->get('/user/dashboard', fn() =>
+    view('user.dashboard', ['user' => auth()->user()])
+)->name('user.dashboard');
 
-Route::middleware(['auth', 'role:admin'])->get('/admin/dashboard', function () {
-    $user = auth()->user();
-    return view('admin.dashboard', compact('user'));
-})->name('admin.dashboard');
+Route::middleware(['auth', 'role:admin'])->get('/admin/dashboard', fn() =>
+    view('admin.dashboard', ['user' => auth()->user()])
+)->name('admin.dashboard');
 
-Route::middleware(['auth', 'role:owner'])->get('/owner/dashboard', function () {
-    $user = auth()->user();
-    return view('owner.dashboard', compact('user'));
-})->name('owner.dashboard');
+Route::middleware(['auth', 'role:owner'])->get('/owner/dashboard', fn() =>
+    view('owner.dashboard', ['user' => auth()->user()])
+)->name('owner.dashboard');
 
-// Route Products hanya untuk admin & owner
+// ===== Products (Admin & Owner) =====
 Route::middleware(['auth', 'role:admin,owner'])->group(function () {
+    // === Produk Umum ===
     Route::get('/products', [ProductController::class, 'form'])->name('products.form');
     Route::post('/products/process', [ProductController::class, 'process'])->name('products.process');
-});
-Route::middleware(['auth', 'role:admin,owner'])->group(function () {
-    Route::get('/products', [ProductController::class, 'form'])->name('products.form');
-    Route::post('/products/process', [ProductController::class, 'process'])->name('products.process');
+
     Route::get('/barang', [ProductController::class, 'barang'])->name('barang');
-
-    // route lama lo
     Route::get('/produk', [ProductController::class, 'produkk'])->name('produk');
+    Route::get('/produk/{angka}', [ProductController::class, 'produk'])
+        ->where('angka', '[0-9]+')
+        ->name('produk.angka');
 
-    // tambahin ini buat parameter angka
-    Route::get('/produk/{angka}', [ProductController::class, 'produk'])->name('produk.angka');
+    // === Master Product ===
+    Route::prefix('master/product')->name('master.product.')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('index');
+        Route::get('/create', [ProductController::class, 'create'])->name('create');
+        Route::post('/store', [ProductController::class, 'store'])->name('store');
+        Route::get('/edit/{product}', [ProductController::class, 'edit'])->name('edit');
+        Route::put('/update/{product}', [ProductController::class, 'update'])->name('update');
+        Route::delete('/delete/{product}', [ProductController::class, 'destroy'])->name('destroy');
+    });
 });
 
-Route::middleware(['auth', 'role:admin,owner'])->group(function () {
-    Route::get('/master/product', [MasterProductController::class, 'index'])->name('master.product.index');
-    Route::get('/master/product/create', [MasterProductController::class, 'create'])->name('master.product.create');
-    Route::post('/master/product/store', [MasterProductController::class, 'store'])->name('master.product.store');
-});
-
+// ===== UTS =====
 Route::middleware(['auth', 'role:uts'])->group(function () {
     Route::get('/uts/dashboard', [UtsController::class, 'index'])->name('uts.dashboard');
-
-    Route::get('/uts/pemrograman', function () {
-        return view('uts.pemrograman');
-    })->name('uts.pemrograman');
-
-    Route::get('/uts/database', function () {
-        return view('uts.database');
-    })->name('uts.database');
+    Route::get('/uts/pemrograman', fn() => view('uts.pemrograman'))->name('uts.pemrograman');
+    Route::get('/uts/database', fn() => view('uts.database'))->name('uts.database');
 });
-
-// Tambahan alias agar route lama tidak error
-Route::middleware(['auth', 'role:admin,owner'])->get('/product/create', function () {
-    return redirect()->route('master.product.create');
-})->name('product-create');
-Route::get('/products/create', [ProductController::class, 'create'])->name('master.product.create');
-Route::post('/products', [ProductController::class, 'store'])->name('master.product.store');
 
 // Auth routes bawaan Breeze
 require __DIR__.'/auth.php';

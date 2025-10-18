@@ -22,7 +22,7 @@ class MasterProductController extends Controller
             'nama_produk' => 'required|string|max:255',
             'harga' => 'required|numeric|min:0',
         ]);
-
+        
         return redirect()->route('master.product.index')
             ->with('success', 'Produk berhasil ditambahkan!');
     }
